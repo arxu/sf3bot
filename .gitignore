@@ -1,2 +1,9 @@
-#rom folder
+#ROM folder
 roms/
+
+#Git
+.git
+
+#Jupyter notebooks / checkpoints
+.ipynb_checkpoints/
+*.ipynb
