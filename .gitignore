@@ -7,3 +7,6 @@ roms/
 #Jupyter notebooks / checkpoints
 .ipynb_checkpoints/
 *.ipynb
+
+#Python
+__pycache__/
