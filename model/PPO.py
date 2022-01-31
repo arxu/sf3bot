@@ -4,7 +4,9 @@
 # In[1]:
 
 
-from model.Network import FeedForwardNN
+from Network import FeedForwardNN
+import torch
+import torch.nn as nn
 from torch.distributions import MultivariateNormal
 from torch.optim import Adam
 import numpy as np
@@ -69,7 +71,7 @@ class PPO:
         return batch_rtgs
         
     def _init_hyperparameters(self):
-        self.timesteps_per_batch = 4800
+        self.max_timesteps_per_batch = 4800
         self.max_timesteps_per_episode = 1600
         self.gamma = 0.95
         self.epochs = 5
@@ -107,7 +109,7 @@ class PPO:
                 
                 #Calculate surrogate losses
                 surr1 = ratios * A_k #Raw ratios
-                surr2 = torch.clamp(ratios, 1 - self-clip, 1 + self.clip) * A_k #Binds ratios within clip hyperparameter from 1
+                surr2 = torch.clamp(ratios, 1 - self.clip, 1 + self.clip) * A_k #Binds ratios within clip hyperparameter from 1
 
                 #Negative minimum of losses causes Adam optimiser to maximise loss
                 #Then get single loss by getting the mean
@@ -118,7 +120,7 @@ class PPO:
                 
                 #Calculate gradients and perform backpropagation on actor network
                 self.actor_optim.zero_grad()
-                actor_loss.backward(retain_graph = true)
+                actor_loss.backward(retain_graph = True)
                 self.actor_optim.step()
                 
                 #Calculate gradients and perform backpropagation on critic network
@@ -126,7 +128,7 @@ class PPO:
                 critic_loss.backward()
                 self.critic_optim.step()
             
-    def evaluate(self, batch_obs):
+    def evaluate(self, batch_obs, batch_acts):
         #Get predictions V for each obs in batch_obs from critic network, squeezing to reduce tensor dimensions to 1
         V = self.critic(batch_obs).squeeze()
         
@@ -150,7 +152,7 @@ class PPO:
         #Timesteps simulated so far
         t_now = 0
         
-        while t < self.t_max_timesteps_per_batch:
+        while t_now < self.max_timesteps_per_batch:
             #Rewards this episode
             ep_rews = []
             
@@ -159,7 +161,7 @@ class PPO:
             
             for ep_t in range(self.max_timesteps_per_episode):
                 #Increment timesteps ran this batch so far
-                t += 1
+                t_now += 1
                 
                 #Collect observation
                 batch_obs.append(obs)
@@ -191,7 +193,7 @@ class PPO:
         return batch_obs, batch_acts, batch_log_probs, batch_rtgs, batch_lens
     
 import gym
-env = gym.make('Pendulum-v0')
+env = gym.make('Pendulum-v1')
 model = PPO(env)
 model.learn(10000)
 
