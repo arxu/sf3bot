@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 from MAMEToolkit.emulator import Emulator
 from MAMEToolkit.emulator import Address
 from MAMEToolkit.sf_environment.Actions import Actions
-from interface.Steps import *
+from Steps import *
 
 
 # Combines the data of multiple time steps
@@ -216,6 +210,7 @@ class GameEnvironment(object):
                 actions += index_to_attack_action(attack_action)
                 data = self.gather_frames(actions)
                 data = self.check_done(data)
+                print(data["frame"])
                 return data["frame"], data["rewards"], self.round_done, self.stage_done, self.game_done
             else:
                 raise EnvironmentError("Attempted to step while characters are not fighting")

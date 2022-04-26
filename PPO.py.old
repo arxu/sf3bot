@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 from Network import FeedForwardNN
 import torch
 import torch.nn as nn
@@ -100,7 +94,7 @@ class PPO:
             #Normalize advantage
             A_k = (A_k - A_k.mean()) / (A_k.std() + 1e-10) #add 1e-10 to avoid divide-by-zero
             
-            for _ in range(self.epochs):
+            for _ in range(self.epochs): #ALG STEP 6 & 7
                 #Calculate V_phi and pi_theta(a_t | s_t)
                 V, curr_log_probs = self.evaluate(batch_obs, batch_acts)
                 
@@ -196,10 +190,4 @@ import gym
 env = gym.make('Pendulum-v1')
 model = PPO(env)
 model.learn(10000)
-
-
-# In[ ]:
-
-
-
 
