@@ -4,9 +4,8 @@ roms/
 #Git
 .git
 
-#Jupyter notebooks / checkpoints
+#Jupyter checkpoints
 .ipynb_checkpoints/
-*.ipynb
 
 #Python
 __pycache__/
