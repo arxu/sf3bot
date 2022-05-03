@@ -158,7 +158,7 @@ class PPO:
             
             data = self.env.emu.step([])
             obs = data["frame"]
-            obs = cv2.resize(obs, dsize=(256, 256), interpolation=cv2.INTER_CUBIC)
+            # obs = cv2.resize(obs, dsize=(256, 256), interpolation=cv2.INTER_CUBIC)
             obs = np.expand_dims(obs, 0)
             print(obs.shape)
             #obs = self.env.reset()

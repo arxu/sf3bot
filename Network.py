@@ -17,26 +17,27 @@ class FeedForwardNN(nn.Module):
         # self.layer3 = nn.Conv2d(128, 128, kernel_size=1, stride=1, padding=1)
         # self.layer4 = nn.Conv2d(128, out_dim, kernel_size=1, stride=1, padding=1)
         
-        # self.layer1 = nn.Conv2d(in_dim, out_dim, kernel_size=1, stride=4, padding=1)
-        # self.layer2 = nn.Conv2d(in_dim, out_dim, kernel_size=1, stride=4, padding=1)
-        # self.layer3 = nn.Conv2d(in_dim, out_dim, kernel_size=1, stride=4, padding=1)
-        # self.layer4 = nn.Conv2d(in_dim, out_dim, kernel_size=1, stride=4, padding=1)
+        self.layer1 = nn.Conv2d(in_dim, 90, kernel_size=1, stride=4, padding=1)
+        self.layer2 = nn.Conv2d(90, 90, kernel_size=1, stride=4, padding=1)
+        self.layer3 = nn.Conv2d(90, 90, kernel_size=1, stride=4, padding=1)
+        self.layer4 = nn.Conv2d(90, out_dim, kernel_size=1, stride=4, padding=1)
         
-        self.layerx = nn.Sequential(
-            nn.Conv2d(in_dim, 64, 3, stride=2, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(64, 64, 3, stride=2, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(64, 64, 3, stride=2, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(64, 64, 3, stride=2, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Linear(512, out_dim)
-        )
+        # self.layerx = nn.Sequential(
+        #     nn.Conv2d(in_dim, 64, 3, stride=2, padding=2),
+        #     nn.ReLU(),
+        #     nn.MaxPool2d(2, 2),
+        #     nn.Conv2d(64, 64, 3, stride=2, padding=2),
+        #     nn.ReLU(),
+        #     nn.MaxPool2d(2, 2),
+        #     nn.Conv2d(64, 64, 3, stride=2, padding=2),
+        #     nn.ReLU(),
+        #     nn.MaxPool2d(2, 2),
+        #     nn.Conv2d(64, 64, 3, stride=2, padding=2),
+        #     nn.ReLU(),
+        #     nn.MaxPool2d(2, 2),
+        #     nn.Linear(512, out_dim)
+        #     # nn.Conv2d(64, out_dim, 3, stride=2, padding=2)
+        # )
         
     #network forward pass taking observation as parameter
     def forward(self, obs):
@@ -47,12 +48,12 @@ class FeedForwardNN(nn.Module):
         #obs.unsqueeze(3)
         
         #activate with ReLU
-        # activation1 = F.relu(self.layer1(obs))
-        # activation2 = F.relu(self.layer2(activation1))
-        # activation3 = F.relu(self.layer3(activation2))
-        # output = self.layer4(activation3)
-        
-        output = self.layerx(obs)
+        activation1 = F.relu(self.layer1(obs))
+        activation2 = F.relu(self.layer2(activation1))
+        activation3 = F.relu(self.layer3(activation2))
+        output = self.layer4(activation3)
+        # obs = torch.flatten(obs, 1)
+        # output = self.layerx(obs)
         
         return output
 

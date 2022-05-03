@@ -85,8 +85,8 @@ class GameEnvGym(gym.Env):
         self.game_done = False
         self.stage = 1
         
-        # self.action_space = Incremental(0, 90, 90)
-        self.action_space = spaces.Box(low=0, high=90, shape=(4,), dtype=np.uint8)
+        #self.action_space = Incremental(0, 90, 90)
+         self.action_space = spaces.Box(low=0, high=90, shape=(4,), dtype=np.uint8)
         self.observation_space = spaces.Box(low=0, high=255, shape=(256, 256, 3, 1), dtype=np.uint8)
         
 
