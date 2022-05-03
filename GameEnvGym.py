@@ -15,6 +15,7 @@ from Incremental import *
 def add_rewards(old_data, new_data):
     for k in old_data.keys():
         if "rewards" in k:
+            print(old_data[k])
             for player in old_data[k]:
                 new_data[k][player] += old_data[k][player]
     return new_data
@@ -86,8 +87,8 @@ class GameEnvGym(gym.Env):
         self.stage = 1
         
         #self.action_space = Incremental(0, 90, 90)
-         self.action_space = spaces.Box(low=0, high=90, shape=(4,), dtype=np.uint8)
-        self.observation_space = spaces.Box(low=0, high=255, shape=(256, 256, 3, 1), dtype=np.uint8)
+        self.action_space = spaces.Box(low=0, high=90, shape=(1,), dtype=np.uint8)
+        self.observation_space = spaces.Box(low=0, high=255, shape=(224, 384, 3, 1), dtype=np.uint8)
         
 
     # Runs a set of action steps over a series of time steps
@@ -207,12 +208,12 @@ class GameEnvGym(gym.Env):
         p2_diff = (self.expected_health["P2"] - data["healthP2"])
         self.expected_health = {"P1": data["healthP1"], "P2": data["healthP2"]}
 
-        rewards = p2_diff - p1_diff
+        #rewards = p2_diff - p1_diff
         
-        # rewards = {
-        #     "P1": (p2_diff-p1_diff),
-        #     "P2": (p1_diff-p2_diff)
-        # }
+        rewards = {
+            "P1": (p2_diff-p1_diff),
+            "P2": (p1_diff-p2_diff)
+        }
 
         data["rewards"] = rewards
         return data
@@ -222,7 +223,9 @@ class GameEnvGym(gym.Env):
         if self.started:
             if not self.round_done and not self.stage_done and not self.game_done:
                 actions = []
-                print(action)
+                action = action.ravel()
+                # print(action)
+                action = abs(int((action[0] + action[1] + action[2])/3))
                 actions += index_to_move_action(action//10)
                 actions += index_to_attack_action(action % 10)
                 data = self.gather_frames(actions)
